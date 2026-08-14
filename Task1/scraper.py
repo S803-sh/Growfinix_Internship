@@ -1,95 +1,129 @@
-import requests
-from bs4 import BeautifulSoup
 import csv
+import re
 
-# ----------------------------------------
-# Real Estate Web Scraper
-# Tech Stack: Python, Requests, BeautifulSoup4, CSV
-# ----------------------------------------
 
-url = "https://example.com/"
+# Sample scraped data
+raw_properties = [
+    {
+        "title": "2 BHK Apartment",
+        "price": "₹45,00,000",
+        "location": "Tirupati, Andhra Pradesh"
+    },
+    {
+        "title": "3 BHK Luxury Villa",
+        "price": "₹75,00,000",
+        "location": "Bangalore, Karnataka"
+    },
+    {
+        "title": "1 BHK Flat",
+        "price": "₹32,50,000",
+        "location": "Chennai, Tamil Nadu"
+    },
+    {
+        "title": "4 BHK Independent House",
+        "price": "₹1,20,00,000",
+        "location": "Hyderabad, Telangana"
+    },
+    {
+        "title": "2 BHK Premium Flat",
+        "price": "₹58,00,000",
+        "location": "Vijayawada, Andhra Pradesh"
+    }
+]
 
-# Send request to website
-headers = {
-    "User-Agent": "Mozilla/5.0"
-}
 
-response = requests.get(url, headers=headers)
+# Clean text
+def clean_text(text):
 
-if response.status_code == 200:
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
-    soup = BeautifulSoup(response.text, "html.parser")
 
-    properties = []
+# Clean property data
+cleaned_properties = []
 
-    # Find all property cards
-    property_cards = soup.select(".property-card")
+for property_data in raw_properties:
 
-    for card in property_cards:
+    title = clean_text(
+        property_data["title"]
+    )
 
-        # Extract title
-        title = card.select_one(".property-title")
+    price = clean_text(
+        property_data["price"]
+    )
 
-        # Extract price
-        price = card.select_one(".property-price")
+    location = clean_text(
+        property_data["location"]
+    )
 
-        # Extract location
-        location = card.select_one(".property-location")
+    cleaned_properties.append({
+        "Property Title": title,
+        "Price": price,
+        "Location": location
+    })
 
-        # Clean data
-        title = title.get_text(" ", strip=True) if title else "N/A"
-        price = price.get_text(" ", strip=True) if price else "N/A"
-        location = location.get_text(" ", strip=True) if location else "N/A"
 
-        properties.append([title, price, location])
+# Create CSV file
+filename = "properties.csv"
 
-    # ----------------------------------------
-    # Save data into CSV file
-    # ----------------------------------------
+with open(
+    filename,
+    "w",
+    newline="",
+    encoding="utf-8"
+) as file:
 
-    with open("real_estate_data.csv", "w", newline="", encoding="utf-8") as file:
+    fieldnames = [
+        "Property Title",
+        "Price",
+        "Location"
+    ]
 
-        writer = csv.writer(file)
+    writer = csv.DictWriter(
+        file,
+        fieldnames=fieldnames
+    )
 
-        # CSV Header
-        writer.writerow([
-            "Property Title",
-            "Price",
-            "Location"
-        ])
+    writer.writeheader()
+    writer.writerows(cleaned_properties)
 
-        # Write property data
-        writer.writerows(properties)
 
-    # ----------------------------------------
-    # Display result
-    # ----------------------------------------
+# Display results
+print("\n========== REAL ESTATE DATA ==========\n")
 
-    print("\n" + "=" * 60)
-    print("       REAL ESTATE SCRAPING RESULTS")
-    print("=" * 60)
+for i, property_data in enumerate(
+    cleaned_properties,
+    start=1
+):
 
-    if properties:
+    print(f"Property {i}")
+    print("-" * 35)
 
-        for i, property_data in enumerate(properties, start=1):
+    print(
+        "Title    :",
+        property_data["Property Title"]
+    )
 
-            print(f"\nProperty {i}")
-            print("-" * 40)
-            print("Title    :", property_data[0])
-            print("Price    :", property_data[1])
-            print("Location :", property_data[2])
+    print(
+        "Price    :",
+        property_data["Price"]
+    )
 
-        print("\n" + "=" * 60)
-        print("Scraping completed successfully!")
-        print("CSV file created: real_estate_data.csv")
-        print("=" * 60)
+    print(
+        "Location :",
+        property_data["Location"]
+    )
 
-    else:
+    print()
 
-        print("\nNo properties found.")
-        print("Check the CSS selectors of the website.")
 
-else:
+print("======================================")
+print(
+    "Total Properties:",
+    len(cleaned_properties)
+)
 
-    print("Unable to access the website.")
-    print("Status Code:", response.status_code)
+print(
+    "CSV file created:",
+    filename
+)
