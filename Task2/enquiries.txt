@@ -1,0 +1,39 @@
+Name: john smith
+Email: JOHN.SMITH@gmail.com
+Destination: Paris
+
+Customer - priya reddy
+email: priya.reddy@yahoo.com
+Travel To: Goa
+
+Name: RAJ KUMAR
+Contact: raj123@gmail.com
+Going To: Dubai
+
+Client: anjali sharma
+Email Address: anjali.sharma@outlook.com
+Destination: Singapore
+
+From: david brown
+Email: david.brown@gmail.com
+Visit: London
+
+Name: sneha patel
+email: sneha.patel123@gmail.com
+Destination: New York
+
+Customer: arun kumar
+Email: arunkumar@gmail.com
+Travelling To: Thailand
+
+Name - Emily Johnson
+Email: emily.johnson@hotmail.com
+Destination - Switzerland
+
+Client: rohit verma
+Contact: rohit.verma@gmail.com
+Going To: Bali
+
+Name: Neha Singh
+Email: neha.singh@yahoo.com
+Destination: Manali
